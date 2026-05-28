@@ -7,11 +7,17 @@ class Habit:
         self.frequency = frequency
         self.created_at = created_at
 
+    def __repr__(self):
+        return f'({self.id}, {self.name}, {self.frequency}, {self.created_at})'
+
 
 class Completion:
     def __init__(self, habit_id, completed_at):
         self.habit_id = habit_id
         self.completed_at = completed_at
+
+    def __repr__(self):
+        return f'({self.habit_id}, {self.completed_at})'
 
 
 class Goal:
@@ -22,6 +28,8 @@ class Goal:
         self.current = current
         self.deadline = deadline
 
+    def __repr__(self):
+        return f'({self.id}, {self.title}, {self.target}, {self.deadline})'
 
 
 
