@@ -27,9 +27,7 @@ class Goal:
         self.target = target
         self.current = current
         self.deadline = deadline
+        self.status_completion = "In process"
 
     def __repr__(self):
-        return f'({self.id}, {self.title}, {self.target}, {self.deadline})'
-
-
-
+        return f'({self.id}, {self.title}, {self.target}, {self.deadline}, {self.status_completion})'
