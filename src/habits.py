@@ -1,5 +1,5 @@
 from datetime import date
-from classes import Habit, Completion
+from src.classes import Habit, Completion
 
 def is_completed_today(habit, completions, today):
     if today is None:
