@@ -1,3 +1,4 @@
+from datetime import date
 import sqlite3
 import os
 
@@ -46,3 +47,27 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+def add_habit(user_id, name, frequency):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""INSERT INTO habits (user_id, name, frequency, created_at) VALUES (?, ?, ?, ?)""", (user_id, name, frequency, date.today().isoformat()))
+
+    conn.commit()
+    conn.close()
+
+
+def get_habits(user_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * 
+        FROM habits 
+        WHERE user_id = ?
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
