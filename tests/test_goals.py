@@ -1,6 +1,7 @@
 from datetime import date
 from src.classes import Goal
-from src.goals import update_goal_status
+from src.goals import update_goal_status,add_progress
+import pytest
 
 #цель выволнена
 def make_goal_done():
@@ -52,3 +53,33 @@ def test_goal_in_process():
     update_goal_status(goal, today=date(2026, 6, 3))
 
     assert goal.status_completion == "In process"
+
+#Проверка на увеличение процесса
+def test_add_progress_increases_current():
+    goal = make_goal_in_progress()
+
+    add_progress(goal, 10)
+
+    assert goal.current == 40
+
+def test_add_progress_negative_raises_error():
+    goal = make_goal_in_progress()
+
+    with pytest.raises(ValueError):
+        add_progress(goal, -100)
+
+def test_add_progress_exact_zero_allowed():
+    goal = make_goal_in_progress()
+
+    add_progress(goal, -30)
+
+    assert goal.current == 0
+
+#Проверка на изменение статуса
+def test_add_progress_updates_status():
+    goal = make_goal_in_progress()
+
+    add_progress(goal, 70)
+
+    assert goal.current == 100
+    assert goal.status_completion == "Done"
