@@ -71,3 +71,27 @@ def get_habits(user_id: int):
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+def add_completion(habit_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""INSERT INTO completions (habit_id, completed_at) VALUES (?, ?)""", (habit_id, date.today().isoformat()))
+
+    conn.commit()
+    conn.close()
+
+
+def get_completions(habit_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * 
+        FROM completions 
+        WHERE habit_id = ?
+    """, (habit_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
