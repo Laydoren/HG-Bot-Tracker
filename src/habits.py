@@ -1,7 +1,7 @@
-from datetime import date
-from classes import Habit, Completion
+from datetime import date, timedelta
+from src.classes import Habit, Completion
 
-def is_completed_today(habit, completions, today):
+def is_completed_today(habit, completions, today = None):
     if today is None:
         today = date.today()
 
@@ -12,12 +12,18 @@ def is_completed_today(habit, completions, today):
     return False
 
 
-# habit = Habit(id=1, name="Reading", frequency="daily", created_at=date(2024, 1, 1))
-#
-# completions = [
-#     Completion(habit_id=1, completed_at=date(2024, 6, 10)),
-#     Completion(habit_id=1, completed_at=date(2024, 6, 11)),
-# ]
-#
-# print(is_completed_today(habit, completions, today=date(2024, 6, 11)))
-# print(is_completed_today(habit, completions, today=date(2024, 6, 12)))
+def calculate_streak(habit, completions, today=None):
+    if today is None:
+        today = date.today()
+
+    completed_dates = set(c.completed_at for c in completions if c.habit_id == habit.id)
+
+    streak = 0
+    current_day = today
+
+    while current_day in completed_dates:
+        streak += 1
+        current_day = current_day - timedelta(days=1)
+
+    return streak
+
