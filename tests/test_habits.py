@@ -85,3 +85,15 @@ def test_streak_zero_for_empty_completions():
     result = calculate_streak(habit, [], today=date(2026, 6, 3))
 
     assert result == 0
+
+def test_streak_ignores_other_habits():
+    habit = make_habit(id=2)
+    completions = [
+        Completion(habit_id=3, completed_at=date(2026, 6, 1)),
+        Completion(habit_id=3, completed_at=date(2026, 6, 2)),
+        Completion(habit_id=3, completed_at=date(2026, 6, 3))
+    ]
+
+    result = calculate_streak(habit, completions, today=date(2026, 6, 3))
+
+    assert result == 0
