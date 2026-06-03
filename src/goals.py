@@ -19,3 +19,10 @@ def add_progress(goal, value):
         raise ValueError("Progress cannot be negative")
     goal.current += value
     update_goal_status(goal)
+
+def get_completion_percentage(goals):
+    if not goals:
+        return 0
+
+    completed = sum(1 for goal in goals if goal.current >= goal.target)
+    return round((completed / len(goals)) * 100, 1)
