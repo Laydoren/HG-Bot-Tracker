@@ -1,5 +1,5 @@
 from datetime import date
-from classes import Goal
+from src.classes import Goal
 
 def update_goal_status(goal, today=None):
     if today is None:
