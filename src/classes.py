@@ -21,12 +21,13 @@ class Completion:
 
 
 class Goal:
-    def __init__(self, id, title, target, current, deadline):
+    def __init__(self, id, title, target, current, deadline, compeleted_at):
         self.id = id
         self.title = title
         self.target = target
         self.current = current
         self.deadline = deadline
+        self.compeleted_at = compeleted_at
 
     def __repr__(self):
         return f'({self.id}, {self.title}, {self.target}, {self.deadline})'
