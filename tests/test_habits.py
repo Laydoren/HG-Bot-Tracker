@@ -67,3 +67,14 @@ def test_streak_breaks_on_missing_day():
     result = calculate_streak(habit, completions, today=date(2026, 6, 5))
 
     assert result == 2
+
+def test_streak_zero_if_missed_today():
+    habit = make_habit()
+    completions = [
+        Completion(habit_id=1, completed_at=date(2024, 6, 1)),
+        Completion(habit_id=1, completed_at=date(2024, 6, 2)),
+    ]
+
+    result = calculate_streak(habit, completions, today=date(2024, 6, 3))
+
+    assert result == 0
