@@ -78,3 +78,10 @@ def test_streak_zero_if_missed_today():
     result = calculate_streak(habit, completions, today=date(2024, 6, 3))
 
     assert result == 0
+
+def test_streak_zero_for_empty_completions():
+    habit = make_habit()
+
+    result = calculate_streak(habit, [], today=date(2026, 6, 3))
+
+    assert result == 0
