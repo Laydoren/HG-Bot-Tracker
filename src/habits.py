@@ -1,7 +1,7 @@
 from datetime import date
 from src.classes import Habit, Completion
 
-def is_completed_today(habit, completions, today):
+def is_completed_today(habit, completions, today = None):
     if today is None:
         today = date.today()
 
