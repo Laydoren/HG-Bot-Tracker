@@ -1,6 +1,6 @@
 from datetime import date
 from src.classes import Goal
-from src.goals import update_goal_status,add_progress
+from src.goals import update_goal_status,add_progress,get_completion_percentage
 import pytest
 
 #цель выволнена
@@ -83,3 +83,37 @@ def test_add_progress_updates_status():
 
     assert goal.current == 100
     assert goal.status_completion == "Done"
+
+# Все целли выполнены
+def test_all_goals_completed():
+    goals = [
+        make_goal_done(),
+        Goal(4, "test", 10, 10, date(2026, 6, 10))
+    ]
+
+    assert get_completion_percentage(goals) == 100.0
+
+#Часть выполнена
+def test_some_goals_completed():
+    goals = [
+        make_goal_done(),        # done
+        make_goal_failed(),      # not done
+        make_goal_in_progress()  # not done
+    ]
+
+    result = get_completion_percentage(goals)
+
+    assert result == round((1 / 3) * 100, 1)
+
+#Ни одна не выполнена
+def test_no_goals_completed():
+    goals = [
+        make_goal_failed(),
+        make_goal_in_progress()
+    ]
+
+    assert get_completion_percentage(goals) == 0.0
+
+#Пустой список
+def test_empty_goals_returns_zero():
+    assert get_completion_percentage([]) == 0
