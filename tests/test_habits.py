@@ -27,3 +27,11 @@ def test_empty_completions_returns_false():
     result = is_completed_today(habit, [], today=date(2000, 1, 1))
 
     assert result is False
+
+def test_completion_for_different_habits_false():
+    habit = make_habit(id=2)
+    completions = [Completion(habit_id=3, completed_at=date(2024, 6, 11))]
+
+    result = is_completed_today(habit, completions, today=date(2024, 6, 11))
+
+    assert result is False
