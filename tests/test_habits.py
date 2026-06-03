@@ -20,3 +20,10 @@ def test_completed_today_false():
     result = is_completed_today(habit, completions, today=date(2000, 1, 1))
 
     assert result is False
+
+def test_empty_completions_returns_false():
+    habit = make_habit()
+
+    result = is_completed_today(habit, [], today=date(2000, 1, 1))
+
+    assert result is False
