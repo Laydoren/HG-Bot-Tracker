@@ -21,11 +21,12 @@ class Completion:
 
 
 class Goal:
-    def __init__(self, id, title, target, current, deadline):
+    def __init__(self, id, title, deadline, target, current, completed=False):
         self.id = id
         self.title = title
         self.target = target
         self.current = current
+        self.completed = completed
         self.deadline = deadline
         self.status_completion = "In process"
 
