@@ -1,5 +1,5 @@
 from datetime import date
-from src.classes import Goal
+from hg_bot_tracker.classes import Goal
 
 def get_goal_status(goal, today=None):
     if today is None:
