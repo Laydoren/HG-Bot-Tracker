@@ -1,6 +1,6 @@
 from datetime import date
 from src.hg_bot_tracker.classes import Goal
-from src.hg_bot_tracker.goals import update_goal_status,add_progress,get_completion_percentage, is_overdue
+from src.hg_bot_tracker.goals import update_goal_status,add_progress,get_completion_percentage, is_overdue, days_remaining
 import pytest
 
 
@@ -153,3 +153,28 @@ def test_not_overdue_when_completed():
 def test_not_overdue_when_target_reached():
     goal = Goal(id=5, title="Тест", target=10, current=10, deadline=date(2026, 6, 1))
     assert is_overdue(goal, today=date(2026, 6, 10)) is False
+
+# Days remaining
+
+def test_days_remaining_correct_number():
+    goal = make_goal_in_progress()
+
+    result = days_remaining(goal, today=date(2026, 6, 20))
+
+    assert result == 10
+
+
+def test_days_remaining_zero_on_deadline_day():
+    goal = make_goal_in_progress()
+
+    result = days_remaining(goal, today=date(2026, 6, 30))
+
+    assert result == 0
+
+
+def test_days_remaining_negative_when_overdue():
+    goal = make_goal_failed()
+
+    result = days_remaining(goal, today=date(2026, 6, 10))
+
+    assert result == -9
