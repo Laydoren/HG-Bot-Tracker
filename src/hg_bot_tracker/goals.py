@@ -35,3 +35,9 @@ def is_overdue(goal, today=None):
     if goal.target is not None and goal.current >= goal.target:
         return False
     return today > goal.deadline
+
+def days_remaining(goal, today=None):
+    if today is None:
+        today = date.today()
+    left = (goal.deadline - today).days
+    return left
