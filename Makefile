@@ -4,7 +4,7 @@ install:
 	pip install -r requirements.txt
 
 run:
-	python app/bot.py
+	python -m app.bot
 
 test:
 	pytest tests/ -v

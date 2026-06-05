@@ -32,4 +32,5 @@ def cmd_help(message):
     )
 
 
-bot.polling()
+if __name__ == "__main__":
+    bot.polling()
