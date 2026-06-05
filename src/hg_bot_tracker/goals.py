@@ -4,6 +4,10 @@ from src.hg_bot_tracker.classes import Goal
 def get_goal_status(goal, today=None):
     if today is None:
         today = date.today()
+
+    if goal.target is None:
+        return "Done" if goal.completed else "In process"
+
     if goal.current >= goal.target:
         return "Done"
     elif today > goal.deadline:
