@@ -1,9 +1,10 @@
 from datetime import date
-from src.classes import Goal
-from src.goals import update_goal_status,add_progress,get_completion_percentage
+from src.hg_bot_tracker.classes import Goal
+from src.hg_bot_tracker.goals import update_goal_status,add_progress,get_completion_percentage, is_overdue, days_remaining
 import pytest
 
-#цель выволнена
+
+# цель выполнена
 def make_goal_done():
     return Goal(
         id=1,
@@ -13,6 +14,7 @@ def make_goal_done():
         deadline=date(2026, 6, 10)
     )
 
+
 def test_goal_done():
     goal = make_goal_done()
 
@@ -20,7 +22,8 @@ def test_goal_done():
 
     assert goal.status_completion == "Done"
 
-#цель невыполнена
+
+# цель невыполнена
 def make_goal_failed():
     return Goal(
         id=2,
@@ -30,6 +33,7 @@ def make_goal_failed():
         deadline=date(2026, 6, 1)
     )
 
+
 def test_goal_not_completed():
     goal = make_goal_failed()
 
@@ -37,7 +41,8 @@ def test_goal_not_completed():
 
     assert goal.status_completion == "Not completed"
 
-#Цель в процессе
+
+# цель в процессе
 def make_goal_in_progress():
     return Goal(
         id=3,
@@ -47,6 +52,7 @@ def make_goal_in_progress():
         deadline=date(2026, 6, 30)
     )
 
+
 def test_goal_in_process():
     goal = make_goal_in_progress()
 
@@ -54,7 +60,8 @@ def test_goal_in_process():
 
     assert goal.status_completion == "In process"
 
-#Проверка на увеличение процесса
+
+# проверка на увеличение прогресса
 def test_add_progress_increases_current():
     goal = make_goal_in_progress()
 
@@ -62,11 +69,13 @@ def test_add_progress_increases_current():
 
     assert goal.current == 40
 
+
 def test_add_progress_negative_raises_error():
     goal = make_goal_in_progress()
 
     with pytest.raises(ValueError):
         add_progress(goal, -100)
+
 
 def test_add_progress_exact_zero_allowed():
     goal = make_goal_in_progress()
@@ -75,7 +84,8 @@ def test_add_progress_exact_zero_allowed():
 
     assert goal.current == 0
 
-#Проверка на изменение статуса
+
+# проверка на изменение статуса
 def test_add_progress_updates_status():
     goal = make_goal_in_progress()
 
@@ -84,20 +94,22 @@ def test_add_progress_updates_status():
     assert goal.current == 100
     assert goal.status_completion == "Done"
 
-# Все целли выполнены
+
+# все цели выполнены
 def test_all_goals_completed():
     goals = [
         make_goal_done(),
-        Goal(4, "test", 10, 10, date(2026, 6, 10))
+        Goal(id=4, title="test", target=10, current=10, deadline=date(2026, 6, 10))
     ]
 
     assert get_completion_percentage(goals) == 100.0
 
-#Часть выполнена
+
+# часть выполнена
 def test_some_goals_completed():
     goals = [
-        make_goal_done(),        # done
-        make_goal_failed(),      # not done
+        make_goal_done(),  # done
+        make_goal_failed(),  # not done
         make_goal_in_progress()  # not done
     ]
 
@@ -105,7 +117,8 @@ def test_some_goals_completed():
 
     assert result == round((1 / 3) * 100, 1)
 
-#Ни одна не выполнена
+
+# ни одна не выполнена
 def test_no_goals_completed():
     goals = [
         make_goal_failed(),
@@ -114,6 +127,54 @@ def test_no_goals_completed():
 
     assert get_completion_percentage(goals) == 0.0
 
-#Пустой список
+
+# пустой список
 def test_empty_goals_returns_zero():
     assert get_completion_percentage([]) == 0
+
+
+# Is overdue
+
+def test_overdue_when_deadline_passed():
+    goal = make_goal_failed()
+    assert is_overdue(goal, today=date(2026, 6, 10)) is True
+
+
+def test_not_overdue_when_deadline_not_passed():
+    goal = make_goal_in_progress()
+    assert is_overdue(goal, today=date(2026, 6, 5)) is False
+
+
+def test_not_overdue_when_completed():
+    goal = make_goal_done()
+    assert is_overdue(goal, today=date(2026, 6, 10)) is False
+
+
+def test_not_overdue_when_target_reached():
+    goal = Goal(id=5, title="Тест", target=10, current=10, deadline=date(2026, 6, 1))
+    assert is_overdue(goal, today=date(2026, 6, 10)) is False
+
+# Days remaining
+
+def test_days_remaining_correct_number():
+    goal = make_goal_in_progress()
+
+    result = days_remaining(goal, today=date(2026, 6, 20))
+
+    assert result == 10
+
+
+def test_days_remaining_zero_on_deadline_day():
+    goal = make_goal_in_progress()
+
+    result = days_remaining(goal, today=date(2026, 6, 30))
+
+    assert result == 0
+
+
+def test_days_remaining_negative_when_overdue():
+    goal = make_goal_failed()
+
+    result = days_remaining(goal, today=date(2026, 6, 10))
+
+    assert result == -9

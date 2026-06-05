@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hg-bot-tracker"
+version = "0.2.0"
+description = "Habit and goal tracking library for bots"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = []
+
+[tool.hatch.build]
+packages = ["src/hg_bot_tracker"]
