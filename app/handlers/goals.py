@@ -38,3 +38,36 @@ def register(bot: telebot.TeleBot):
 
         add_goal(user_id=message.from_user.id, title=title, deadline=deadline, target=target)
         bot.send_message(message.chat.id, f"Цель «{title}» добавлена")
+
+
+    @bot.message_handler(commands=["goals"])
+    def cmd_goals(message):
+        rows = get_goals(user_id=message.from_user.id)
+
+        if not rows:
+            bot.send_message(message.chat.id, "У тебя пока нет целей")
+            return
+
+        text = "Твои цели:\n\n"
+        for row in rows:
+            goal = Goal(id=row["id"], title=row["title"], target=row["target"], current=row["current"], deadline=date.fromisoformat(row["deadline"]), completed=bool(row["completed"]))
+
+            update_goal_status(goal)
+
+            overdue = is_overdue(goal)
+            days = days_remaining(goal)
+
+            if goal.target is not None:
+                text += f"* {goal.title} - {goal.current}/{goal.target}"
+            else:
+                text += f"* {goal.title}"
+
+            text += f" [{goal.status_completion}]"
+
+            if days >= 0:
+                text += f" - осталось {days} дн.\n"
+            else:
+                text += f" - просрочено на {abs(days)} дн.\n"
+
+        bot.send_message(message.chat.id, text)
+
