@@ -1,5 +1,5 @@
 from datetime import date
-from .classes import Goal
+from src.hg_bot_tracker.classes import Goal
 
 def get_goal_status(goal, today=None):
     if today is None:
@@ -26,3 +26,18 @@ def get_completion_percentage(goals):
 
     completed = sum(1 for goal in goals if goal.current >= goal.target)
     return round((completed / len(goals)) * 100, 1)
+
+def is_overdue(goal, today=None):
+    if today is None:
+        today = date.today()
+    if goal.completed:
+        return False
+    if goal.target is not None and goal.current >= goal.target:
+        return False
+    return today > goal.deadline
+
+def days_remaining(goal, today=None):
+    if today is None:
+        today = date.today()
+    left = (goal.deadline - today).days
+    return left
