@@ -1,4 +1,5 @@
 # HG-Bot-Tracker
+
 Telegram-бот для отслеживания привычек и целей.
 
 ## Подготовка
@@ -26,6 +27,22 @@ make docker-down    # остановить контейнер
 ## Тесты
 ```bash
 make test      # запустить тесты
+```
+
+## Библиотека
+
+Пакет `hg-bot-tracker` — библиотека с моделями и логикой для трекинга привычек и целей.
+
+**Установка:**
+```bash
+pip install -i https://test.pypi.org/simple/ hg-bot-tracker==0.2.0
+```
+
+**Импорт:**
+```python
+from src.hg_bot_tracker.classes import Goal, Habit, Completion
+from src.hg_bot_tracker.goals import add_progress, get_goal_status
+from src.hg_bot_tracker.habits import is_completed_today, calculate_streak
 ```
 
 ## Структура
