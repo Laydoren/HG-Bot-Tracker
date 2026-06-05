@@ -1,6 +1,6 @@
 from datetime import date
-from src.classes import Habit, Completion
-from src.habits import is_completed_today, calculate_streak
+from src.hg_bot_tracker.classes import Habit, Completion
+from src.hg_bot_tracker.habits import is_completed_today, calculate_streak
 
 
 def make_habit(id=1):
