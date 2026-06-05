@@ -2,7 +2,7 @@ from datetime import date
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "infra", "db", "habits.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "..", "infra", "db", "database.db")
 
 
 def get_connection():
@@ -12,6 +12,8 @@ def get_connection():
 
 
 def init_db():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
     conn = get_connection()
     cursor = conn.cursor()
 
