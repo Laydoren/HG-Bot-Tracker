@@ -26,6 +26,8 @@ def cmd_help(message):
         "/add_habit — добавить привычку\n"
         "/habits — список привычек\n"
         "/done — отметить выполнение\n"
+        "/add_goal — добавить цель\n"
+        "/goals — список целей\n"
     )
 
 
