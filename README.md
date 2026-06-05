@@ -11,3 +11,16 @@ make run       # запустить бота
 ```bash
 make test      # запустить тесты
 ```
+
+## Структура
+
+```shell
+app/bot.py         — точка входа
+app/handlers/      — обработчики команд
+src/               — библиотека и БД
+src/hg_bot_tracker/ — модели и логика
+src/database.py    — SQLite
+docs/              — документация Sphinx
+tests/             — тесты
+```
+
