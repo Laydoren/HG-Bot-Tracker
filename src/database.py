@@ -121,3 +121,16 @@ def get_goals(user_id):
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+def update_goal_progress(goal_id, current):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE goals 
+        SET current = ? 
+        WHERE id = ?
+    """, (current, goal_id))
+
+    conn.commit()
+    conn.close()
