@@ -134,3 +134,16 @@ def update_goal_progress(goal_id, current):
 
     conn.commit()
     conn.close()
+
+def update_goal_completed(goal_id, completed):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE goals 
+        SET completed = ? 
+        WHERE id = ?
+    """, (int(completed), goal_id))
+
+    conn.commit()
+    conn.close()
