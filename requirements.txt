@@ -1,0 +1,5 @@
+pyTelegramBotAPI
+python-dotenv
+pytest
+--extra-index-url https://test.pypi.org/simple/
+hg-bot-tracker
