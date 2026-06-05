@@ -2,7 +2,7 @@ import telebot
 from datetime import date
 from src.hg_bot_tracker.classes import Goal
 from src.hg_bot_tracker.goals import add_progress, update_goal_status, days_remaining, is_overdue
-from src.database import add_goal, get_goals, update_goal_progress
+from src.database import add_goal, get_goals, update_goal_progress, update_goal_completed
 
 def register(bot: telebot.TeleBot):
 
@@ -78,7 +78,7 @@ def register(bot: telebot.TeleBot):
 
         if len(parts) < 2:
             bot.send_message(message.chat.id,
-                             "Укажи название цели и значение. Например:\n"
+                             "Укажи название цели и значение\n Например:\n"
                              "/progress Прочитать 12 книг; 3")
             return
 
@@ -110,11 +110,21 @@ def register(bot: telebot.TeleBot):
 
         goal = Goal(id=goal_row["id"], title=goal_row["title"], target=goal_row["target"], current=goal_row["current"], deadline=date.fromisoformat(goal_row["deadline"]), completed=bool(goal_row["completed"]))
 
-        try:
-            add_progress(goal, value)
-        except ValueError as e:
-            bot.send_message(message.chat.id, str(e))
-            return
+        if goal.target is None:
+            if value not in (0, 1):
+                bot.send_message(message.chat.id, "Для этой цели укажи 1 (выполнено) или 0 (не выполнено)")
+                return
 
-        update_goal_progress(goal.id, goal.current)
-        bot.send_message(message.chat.id,f"Прогресс обновлён «{goal.title}» - {goal.current}/{goal.target} [{goal.status_completion}]")
+            goal.completed = bool(value)
+            update_goal_completed(goal.id, goal.completed)
+            status = "выполнена" if goal.completed else "сброшена"
+            bot.send_message(message.chat.id, f"Цель «{goal.title}» {status}")
+        else:
+            try:
+                add_progress(goal, value)
+            except ValueError as e:
+                bot.send_message(message.chat.id, str(e))
+                return
+
+            update_goal_progress(goal.id, goal.current)
+            bot.send_message(message.chat.id, f"Прогресс обновлён «{goal.title}» - {goal.current}/{goal.target} [{goal.status_completion}]")
