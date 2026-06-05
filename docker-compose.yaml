@@ -5,6 +5,7 @@ services:
       - .env
     volumes:
       - db-data:/app/infra/db
+    network_mode: host
 
 volumes:
   db-data:
