@@ -71,3 +71,50 @@ def register(bot: telebot.TeleBot):
 
         bot.send_message(message.chat.id, text)
 
+
+    @bot.message_handler(commands=["progress"])
+    def cmd_progress(message):
+        parts = message.text.split(maxsplit=1)
+
+        if len(parts) < 2:
+            bot.send_message(message.chat.id,
+                             "Укажи название цели и значение. Например:\n"
+                             "/progress Прочитать 12 книг; 3")
+            return
+
+        args = parts[1].split(";")
+        args = [a.strip() for a in args]
+
+        if len(args) != 2:
+            bot.send_message(message.chat.id, "Неверный формат. Попробуй ещё раз")
+            return
+
+        title, value = args
+        try:
+            value = float(value)
+        except ValueError:
+            bot.send_message(message.chat.id, "Значение должно быть числом")
+            return
+
+        rows = get_goals(user_id=message.from_user.id)
+
+        goal_row = None
+        for row in rows:
+            if row["title"].lower() == title.lower():
+                goal_row = row
+                break
+
+        if goal_row is None:
+            bot.send_message(message.chat.id, f"Цель «{title}» не найдена")
+            return
+
+        goal = Goal(id=goal_row["id"], title=goal_row["title"], target=goal_row["target"], current=goal_row["current"], deadline=date.fromisoformat(goal_row["deadline"]), completed=bool(goal_row["completed"]))
+
+        try:
+            add_progress(goal, value)
+        except ValueError as e:
+            bot.send_message(message.chat.id, str(e))
+            return
+
+        update_goal_progress(goal.id, goal.current)
+        bot.send_message(message.chat.id,f"Прогресс обновлён «{goal.title}» - {goal.current}/{goal.target} [{goal.status_completion}]")
