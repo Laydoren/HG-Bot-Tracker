@@ -15,6 +15,14 @@ make install   # установить зависимости
 make run       # запустить бота
 ```
 
+## Запуск через Docker
+
+```bash
+make docker-build   # собрать образ
+make docker-up      # запустить контейнер
+make docker-down    # остановить контейнер
+```
+
 ## Тесты
 ```bash
 make test      # запустить тесты
