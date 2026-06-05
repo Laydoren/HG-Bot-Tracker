@@ -95,3 +95,29 @@ def get_completions(habit_id: int):
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+# Goals
+
+def add_goal(user_id, title, deadline, target=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO goals (user_id, title, target, current, completed, deadline)VALUES (?, ?, ?, 0, 0, ?)""", (user_id, title, target, deadline))
+
+    conn.commit()
+    conn.close()
+
+def get_goals(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * 
+        FROM goals 
+        WHERE user_id = ?
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+    return rows

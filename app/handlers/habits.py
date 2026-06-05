@@ -1,7 +1,7 @@
 import telebot
 from datetime import date
-from src.classes import Habit, Completion
-from src.habits import is_completed_today, calculate_streak
+from src.hg_bot_tracker.classes import Habit, Completion
+from src.hg_bot_tracker.habits import is_completed_today, calculate_streak
 from src.database import add_habit, get_habits, add_completion, get_completions
 
 
