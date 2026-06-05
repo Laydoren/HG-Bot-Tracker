@@ -1,78 +1,78 @@
-# Architecture
+# Архитектура
 
-## Technology Stack
+## Технологический стек
 
-| Component | Technology |
+| Компонент | Технология |
 |-----------|------------|
-| Runtime | Python 3.10+ |
-| Bot framework | pyTelegramBotAPI |
-| Database | SQLite |
-| Build | hatchling |
-| Docs | Sphinx + myst-parser |
+| Среда выполнения | Python 3.10+ |
+| Фреймворк бота | pyTelegramBotAPI |
+| База данных | SQLite |
+| Сборка пакета | hatchling |
+| Документация | Sphinx + myst-parser |
 
-## Layer Architecture
+## Слои архитектуры
 
 ```
 ┌─────────────────────────────────┐
 │         Telegram API            │
 ├─────────────────────────────────┤
-│     app/bot.py (entry point)    │
+│     app/bot.py (точка входа)    │
 ├─────────────────────────────────┤
 │  app/handlers/habits.py         │
 │  app/handlers/goals.py          │
 ├─────────────────────────────────┤
-│  src/hg_bot_tracker/ (core lib) │
+│  src/hg_bot_tracker/ (ядро)     │
 │  src/database.py                │
 ├─────────────────────────────────┤
-│         SQLite DB               │
+│         SQLite БД               │
 └─────────────────────────────────┘
 ```
 
-## Component Description
+## Описание компонентов
 
-### 1. Entry Point (`app/bot.py`)
-- Loads environment variables
-- Initializes database
-- Registers all command handlers
-- Starts bot polling only when run directly (`if __name__ == "__main__"`)
+### 1. Точка входа (`app/bot.py`)
+- Загружает переменные окружения
+- Инициализирует базу данных
+- Регистрирует все обработчики команд
+- Запускает цикл polling только при прямом запуске (`if __name__ == "__main__"`)
 
-### 2. Handlers (`app/handlers/`)
-- **habits.py** — handles `/add_habit`, `/habits`, `/done`
-- **goals.py** — handles `/add_goal`, `/goals`, `/progress`
-- Each handler parses user input, calls core logic and database functions
+### 2. Обработчики (`app/handlers/`)
+- **habits.py** — обрабатывает `/add_habit`, `/habits`, `/done`
+- **goals.py** — обрабатывает `/add_goal`, `/goals`, `/progress`
+- Каждый обработчик парсит ввод пользователя, вызывает функции ядра и базы данных
 
-### 3. Core Library (`src/hg_bot_tracker/`)
-- **classes.py** — data models: `Habit`, `Completion`, `Goal`
-- **habits.py** — habit logic: `is_completed_today()`, `calculate_streak()`
-- **goals.py** — goal logic: `get_goal_status()`, `add_progress()`, `is_overdue()`, `days_remaining()`
+### 3. Ядро (`src/hg_bot_tracker/`)
+- **classes.py** — модели данных: `Habit`, `Completion`, `Goal`
+- **habits.py** — логика привычек: `is_completed_today()`, `calculate_streak()`
+- **goals.py** — логика целей: `get_goal_status()`, `add_progress()`, `is_overdue()`, `days_remaining()`
 
-### 4. Database Layer (`src/database.py`)
-- SQLite connection management
-- CRUD operations for habits, completions, goals
-- No ORM — raw SQL queries
+### 4. Слой базы данных (`src/database.py`)
+- Управление подключением к SQLite
+- CRUD-операции для привычек, отметок и целей
+- Без ORM — прямые SQL-запросы
 
-## Data Flow
+## Потоки данных
 
-### Habit Completion Flow
+### Отметка выполнения привычки
 ```
-User → /done → bot.py → habits handler → get_habits()
-                                       → get_completions()
-                                       → is_completed_today()
-                                       → add_completion()
-                                       → calculate_streak()
-                                       → response to user
-```
-
-### Goal Progress Flow
-```
-User → /progress → bot.py → goals handler → get_goals()
-                                          → add_progress()
-                                          → update_goal_status()
-                                          → update_goal_progress()
-                                          → response to user
+Пользователь → /done → bot.py → обработчик привычек → get_habits()
+                                                     → get_completions()
+                                                     → is_completed_today()
+                                                     → add_completion()
+                                                     → calculate_streak()
+                                                     → ответ пользователю
 ```
 
-## Dependency Graph
+### Добавление прогресса цели
+```
+Пользователь → /progress → bot.py → обработчик целей → get_goals()
+                                                      → add_progress()
+                                                      → update_goal_status()
+                                                      → update_goal_progress()
+                                                      → ответ пользователю
+```
+
+## Граф зависимостей
 
 ```
 app/bot.py
