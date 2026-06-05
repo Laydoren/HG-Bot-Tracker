@@ -15,7 +15,7 @@ goals.register(bot)
 
 @bot.message_handler(commands=["start"])
 def cmd_start(message):
-    bot.send_message(message.chat.id, "Привет! Я трекер привычек и целей 👋\n""Для просмотра команд пропишите /start")
+    bot.send_message(message.chat.id, "Привет! Я трекер привычек и целей 👋\n""Для просмотра команд пропишите /help")
 
 
 @bot.message_handler(commands=["help"])
