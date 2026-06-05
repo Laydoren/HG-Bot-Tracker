@@ -34,7 +34,7 @@
 - Loads environment variables
 - Initializes database
 - Registers all command handlers
-- Starts bot polling
+- Starts bot polling only when run directly (`if __name__ == "__main__"`)
 
 ### 2. Handlers (`app/handlers/`)
 - **habits.py** — handles `/add_habit`, `/habits`, `/done`
