@@ -28,6 +28,7 @@ def cmd_help(message):
         "/done — отметить выполнение\n"
         "/add_goal — добавить цель\n"
         "/goals — список целей\n"
+        "/progress — добавить прогресс цели\n"
     )
 
 
