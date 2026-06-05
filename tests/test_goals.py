@@ -1,6 +1,6 @@
 from datetime import date
-from src.classes import Goal
-from src.goals import update_goal_status,add_progress,get_completion_percentage
+from src.hg_bot_tracker.classes import Goal
+from src.hg_bot_tracker.goals import update_goal_status,add_progress,get_completion_percentage
 import pytest
 
 #цель выволнена
